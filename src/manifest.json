@@ -1,0 +1,25 @@
+{
+  "name": "Agar Block",
+  "short_name": "AB",
+  "version": "0.0.1",
+  "manifest_version": 2,
+  "description": "Automatic close agar after one game or 5 min",
+  "browser_action": {
+    "default_title": "Agar Block"
+  },
+  "background": {
+    "scripts": ["js/background.js"],
+    "persistent": false
+  },
+  "permissions": [
+      "alarms", "tabs", "notifications", "storage"
+  ],
+  "content_scripts": [
+      {
+          "matches": ["http://agar.io/*"],
+          "js": ["js/block.js"],
+          "run_at": "document_start"
+      }
+  ]
+}
+

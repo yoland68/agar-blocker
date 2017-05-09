@@ -19,7 +19,7 @@ chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
         removeAgars();
       } else {
         chrome.alarms.create("closing", {delayInMinutes: 5});
-        chrome.alarms.create("warning", {delayInMinutes: 4.5});
+        chrome.alarms.create("warning", {delayInMinutes: 4});
       }
     });
 
@@ -42,9 +42,9 @@ chrome.alarms.onAlarm.addListener(function(alarm) {
   if (alarm.name == "warning") {
     chrome.notifications.create("warining", {
       type: "basic",
-      title: "30 seconds left",
+      title: "1 min left",
       isClickable: false,
       iconUrl: chrome.runtime.getURL('icons/48.png'),
-      message: "30 seconds left for your Agar game, time to make someone's day"});
+      message: "1 min left for your Agar game, time to make someone's day"});
   }
 });

@@ -8,15 +8,15 @@ function removeAgars() {
 
 function removeAgarsAndStoreTime() {
   removeAgars();
-  var next = new Date();
-  next.setMinutes(next.getMinutes()+25);
-  chrome.storage.local.set({ "nextTimeStamp": next.getTime() });
+  //chrome.storage.local.set({ "timeStamp": next.getTime() });
+  chrome.storage.local.set({ "timeStamp": Date.now() });
 }
 
 chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
   if (msg.counter) {
-    chrome.storage.local.get("nextTimeStamp", function(items) {
-      if (items.nextTimeStamp && items.nextTimeStamp > Date.now()) {
+    chrome.storage.local.get("timeStamp", function(items) {
+      if (items.timeStamp && new Date().setMinutes(
+            new Date().getMinutes()-25) < items.timeStamp ) {
         chrome.notifications.create("No Access", {
             type: "basic",
             title: "Can not access Agar yet",
@@ -25,15 +25,15 @@ chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
             message: "25 time interval"});
         removeAgars();
       } else {
-        if (Math.random()>0.5) {
+        ;
+        if (items.timeStamp && new Date().setMinutes(
+              new Date().getMinutes()-60) < items.timeStamp && Math.random()>0.5) {
           chrome.notifications.create("Hey, do some stretches", {
             type: "basic",
             title: "Do some stretches so you can live a happier life, lol",
             isClickable: false,
             iconUrl: chrome.runtime.getURL('icons/48_cat.png'),
             message: "25 time interval"});
-        removeAgars();
-
           removeAgarsAndStoreTime();
         } else {
           chrome.alarms.create("closing", {delayInMinutes: 5});

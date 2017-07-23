@@ -12,6 +12,10 @@ function removeAgarsAndStoreTime() {
   chrome.storage.local.set({ "timeStamp": Date.now() });
 }
 
+function isWeekday() {
+  const day = new Date();
+  return (day == 6) || (day == 0)
+}
 chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
   if (msg.counter) {
     chrome.storage.local.get("timeStamp", function(items) {
@@ -25,8 +29,7 @@ chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
             message: "25 time interval"});
         removeAgars();
       } else {
-        ;
-        if (items.timeStamp && new Date().setMinutes(
+        if (items.timeStamp && isWeekday() && new Date().setMinutes(
               new Date().getMinutes()-60) < items.timeStamp && Math.random()>0.5) {
           chrome.notifications.create("Hey, do some stretches", {
             type: "basic",

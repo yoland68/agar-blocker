@@ -14,11 +14,13 @@ function removeAgarsAndStoreTime() {
 
 function isWeekday() {
   const day = new Date();
+  console.log("Today is " + day);
   return (day == 6) || (day == 0)
 }
 chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
   if (msg.counter) {
     chrome.storage.local.get("timeStamp", function(items) {
+      console.log("Time stamp" + items.timeStamp);
       if (items.timeStamp && new Date().setMinutes(
             new Date().getMinutes()-25) < items.timeStamp ) {
         chrome.notifications.create("No Access", {
@@ -44,9 +46,8 @@ chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
         }
       }
     });
-
   } else if (msg.now) {
-    removeAgars();
+    removeAgarsAndStoreTime();
   }
 });
 

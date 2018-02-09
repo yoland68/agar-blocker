@@ -13,9 +13,8 @@ function removeAgarsAndStoreTime() {
 }
 
 function isWeekday() {
-  const day = new Date();
-  console.log("Today is " + day);
-  return (day == 6) || (day == 0)
+  const day = new Date().getDay();
+  return (day != 6) && (day != 0)
 }
 chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
   if (msg.counter) {

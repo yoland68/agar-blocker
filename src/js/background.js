@@ -38,6 +38,7 @@ chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
             isClickable: false,
             iconUrl: chrome.runtime.getURL('icons/48_cat.png'),
             message: "25 time interval"});
+          chrome.tabs.create({url: "https://photos.app.goo.gl/PDkpfWBPXAGbpCtP2", active: true})
           removeAgarsAndStoreTime();
         } else {
           chrome.alarms.create("closing", {delayInMinutes: 5});

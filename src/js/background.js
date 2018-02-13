@@ -27,19 +27,19 @@ chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
             title: "Can not access Agar yet",
             isClickable: false,
             iconUrl: chrome.runtime.getURL('icons/48.png'),
-            message: "25 time interval"});
+            message: "25-min time interval"});
         removeAgars();
       } else {
         if (items.timeStamp && isWeekday() && new Date().setMinutes(
-              new Date().getMinutes()-60) < items.timeStamp && Math.random()>0.5) {
-          chrome.notifications.create("Hey, do some stretches", {
+            new Date().getMinutes()-240) < items.timeStamp) {
+          chrome.notifications.create("Hey, take a mindful break and do some stretches", {
             type: "basic",
-            title: "Do some stretches so you can live a happier life, lol",
+            title: "Mindful breaks help your memory and stretches make sure your body functions",
             isClickable: false,
             iconUrl: chrome.runtime.getURL('icons/48_cat.png'),
-            message: "25 time interval"});
+            message: "4 hour time interval"});
           chrome.tabs.create({url: "https://photos.app.goo.gl/PDkpfWBPXAGbpCtP2", active: true})
-          removeAgarsAndStoreTime();
+          removeAgars();
         } else {
           chrome.alarms.create("closing", {delayInMinutes: 5});
           chrome.alarms.create("warning", {delayInMinutes: 4});

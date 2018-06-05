@@ -8,18 +8,17 @@ function removeAgars() {
 
 function removeAgarsAndStoreTime() {
   removeAgars();
-  //chrome.storage.local.set({ "timeStamp": next.getTime() });
   chrome.storage.local.set({ "timeStamp": Date.now() });
 }
 
-function isWeekday() {
+function isHighFocusPeriod() {
   const day = new Date().getDay();
-  return (day != 6) && (day != 0)
+  const hour = new Date().getHours();
+  return (day != 6) && (day != 0) && (hour < 18)
 }
 chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
   if (msg.counter) {
     chrome.storage.local.get("timeStamp", function(items) {
-      console.log("Time stamp" + items.timeStamp);
       if (items.timeStamp && new Date().setMinutes(
             new Date().getMinutes()-25) < items.timeStamp ) {
         chrome.notifications.create("No Access", {
@@ -30,8 +29,8 @@ chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
             message: "25-min time interval"});
         removeAgars();
       } else {
-        if (items.timeStamp && isWeekday() && new Date().setMinutes(
-            new Date().getMinutes()-240) < items.timeStamp) {
+        if (items.timeStamp && isHighFocusPeriod() && new Date().setMinutes(
+            new Date().getMinutes()-60) < items.timeStamp) {
           chrome.notifications.create("Hey, take a mindful break and do some stretches", {
             type: "basic",
             title: "Mindful breaks help your memory and stretches make sure your body functions",
@@ -41,8 +40,28 @@ chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
           chrome.tabs.create({url: "https://photos.app.goo.gl/PDkpfWBPXAGbpCtP2", active: true})
           removeAgars();
         } else {
-          chrome.alarms.create("closing", {delayInMinutes: 5});
-          chrome.alarms.create("warning", {delayInMinutes: 4});
+          if (!isHighFocusPeriod()) {
+            const time = 5+Math.min(Math.floor(Math.abs(items.timeStamp - new Date())/36e5), 5);
+            chrome.notifications.create("notify", {
+              type: "basic",
+              title: time + " min of gameplay",
+              isClickable: false,
+              iconUrl: chrome.runtime.getURL('icons/clippy.png'),
+              message: "You have " + time + " min for your Agar game"});
+            chrome.alarms.create("closing", {delayInMinutes: time});
+            chrome.alarms.create("warning", {delayInMinutes: time-1});
+          } else {
+            chrome.notifications.create("notify", {
+              type: "basic",
+              title: "5 min of gameplay",
+              isClickable: false,
+              iconUrl: chrome.runtime.getURL('icons/clippy.png'),
+              message: "You have 5 min for your Agar game"});
+            chrome.alarms.create("notify", {delayInMinutes: 0});
+            chrome.alarms.create("closing", {delayInMinutes: 5});
+            chrome.alarms.create("warning", {delayInMinutes: 4});
+          }
+          
         }
       }
     });

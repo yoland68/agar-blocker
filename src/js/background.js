@@ -57,7 +57,6 @@ chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
               isClickable: false,
               iconUrl: chrome.runtime.getURL('icons/clippy.png'),
               message: "You have 5 min for your Agar game"});
-            chrome.alarms.create("notify", {delayInMinutes: 0});
             chrome.alarms.create("closing", {delayInMinutes: 5});
             chrome.alarms.create("warning", {delayInMinutes: 4});
           }
